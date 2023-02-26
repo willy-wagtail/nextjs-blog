@@ -7,8 +7,17 @@ import Layout, { siteTitle } from "../components/layout";
 import Date from "../components/date";
 
 import utilStyles from "../styles/utils.module.css";
+import { GetStaticProps } from "next";
 
-export default function Home({ allPostsData }) {
+export type HomeProps = {
+  allPostsData: {
+    date: string;
+    title: string;
+    id: string;
+  }[];
+};
+
+export default function Home({ allPostsData }: HomeProps) {
   return (
     <Layout home>
       <Head>
@@ -51,10 +60,11 @@ export default function Home({ allPostsData }) {
   );
 }
 
-export async function getStaticProps() {
+export const getStaticProps: GetStaticProps = async () => {
+  const allPostsData = getSortedPostsData();
   return {
     props: {
-      allPostsData: getSortedPostsData(),
+      allPostsData,
     },
   };
-}
+};

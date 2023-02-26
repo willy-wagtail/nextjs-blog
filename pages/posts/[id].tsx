@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { GetStaticPaths, GetStaticProps } from "next";
 
 import DOMPurify from "isomorphic-dompurify";
 
@@ -8,7 +9,15 @@ import Date from "../../components/date";
 
 import utilStyles from "../../styles/utils.module.css";
 
-export default function Post({ postData }) {
+export type PostProps = {
+  postData: {
+    title: string;
+    date: string;
+    contentHtml: string;
+  };
+};
+
+export default function Post({ postData }: PostProps) {
   return (
     <Layout>
       <Head>
@@ -32,19 +41,19 @@ export default function Post({ postData }) {
   );
 }
 
-export async function getStaticPaths() {
+export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: getAllPostIds(),
     fallback: false,
   };
-}
+};
 
-export async function getStaticProps({ params }) {
-  const postData = await getPostData(params.id);
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const postData = await getPostData(params?.id as string);
 
   return {
     props: {
       postData,
     },
   };
-}
+};
